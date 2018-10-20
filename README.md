@@ -1,7 +1,42 @@
-# CarND-Controls-PID
+# Driving a Vehicle with PID Control
 Self-Driving Car Engineer Nanodegree Program
 
 ---
+
+## Project Basics
+
+In this project I use a Propotional-Integral-Derivative Controller or PID for short in order to drive a simulated car around a virtual track. The project involves
+implementation of PID controller primarily for the steering angle of the car as well as tuning the co-efficients such as Kp, Ki, Kr values in order to calculate a 
+steering that keeps the car on the track.
+
+
+### Project Steps
+
+* Implementation of PID Controller for steering
+* Optimize init parameters
+* Optional Implementation of Twiddle to control steering angle and throttle value.
+
+
+### Rubric Discussion Points
+
+#### Describe the effect of each of the PID components had in your implementation
+
+The P for Proportional component had the most directly observable effect on cars driving behavior. It causes the car to steer proportional to the car's distance from the center aka CTE.
+If the car is far to the right it steers hard to the left, if it is slightly to the left it steers slightly to the right.
+
+
+The D for Differential component counteracts the P component's tendency to ring and overshoot the center line. A properly tuned D parameter will cause the car to approach the center line smoothly without 
+ringing. If the co-efficient is too high for D then it leads to almost constant steering angle changes of large degrees, where although the car will be well centered it can hardly move. Too low of a D coefficient will lead to oscillations being too high with more overshooting.
+
+The I for Integral component counteracts a bias in the CTE which prevents the P-D controller from reaching the center line. This bias can take several forms, such as a steering drift(as in the Control unit Lessons) It also servers as to reduce the CTE around curves. If the coefficient for I is too high then the car tends to have quicker oscillations, and does not tend to get up to a quick speed. A low co-efficient will cause the car to tend to drift to one side of the lane or the other for longer periods of time.
+
+
+#### Finding the Right Hyper parameters
+
+Although I tweaked whole lot of parameters (which I commented out) such as introduction of twiddle, which did not seems to perform very well. I endeded up deciding against the implementation of twiddle as the results varied from run to run and many times the car got stuck mid way.
+
+In the end I decided to have amnaul tuning  where I choosethe coefficients as 0.2, 0.004, 3.0 which seemeed to work fine for almost  7 out of 10 loops, but in 3 loops it still ended up crashing or getting stuck mid way.
+
 
 ## Dependencies
 

@@ -33,12 +33,13 @@ int main()
   uWS::Hub h;
 
   //Initialize steering and throttle PID controller
-  PID pid_s, pid_t;
+  PID pid;
   // DONE: Initialize the pid variable.
-  pid_s.Init(0.134611, 0.000270736, 3.05349);
-  pid_t.Init(0.316731, 0.0, 0.0226185);
+  //pid_s.Init(0.134611, 0.000270736, 3.05349);
+  //pid_t.Init(0.316731, 0.0, 0.0226185);
+  pid.Init(0.2, 0.004, 3.0);
 
-  h.onMessage([&pid_s, &pid_t](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
+  h.onMessage([&pid](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
@@ -65,21 +66,24 @@ int main()
           */
         
 	  // Update error values with cte 
-	  pid_s.UpdateError(cte);
+	  pid.UpdateError(cte);
 	
 
 	   //Calculate steering value
-	   steer_value =  - pid_s.Kp * pid_s.p_error
+	   /*steer_value =  - pid_s.Kp * pid_s.p_error
 	 		  - pid_s.Kd * pid_s.d_error
 	       		  - pid_s.Ki * pid_s.i_error;		  
-
+	   */
+	    steer_value = pid.TotalError();
 	   //Update  error and calculate steer_value at each step
-	   pid_t.UpdateError(fabs(cte));
+	   /*pid_t.UpdateError(fabs(cte));
 	   throttle_value = 0.75 - pid_t.Kp * pid_t.p_error
 		    	    - pid_t.Kd * pid_t.d_error
 			    - pid_t.Ki * pid_t.i_error;
 
-
+	   */
+	
+	  throttle_value = (1 - std::abs(steer_value)) * 0.5 + 0.2; 
           // DEBUG
           //std::cout << "CTE: " << cte << " Steering Value: " << steer_value << std::endl;
 
